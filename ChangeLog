@@ -1,0 +1,31 @@
+2004/01/02 15:09 (-0500) rwmcfa1
+
+	* Makefile.PL: rpm stuff added
+
+	* perl-Gnome2-Rsvg.spec.in: initial import
+
+2003/12/29 03:19 (+0100) kaffeetisch
+
+	* t/Rsvg.t
+	* xs/Rsvg.xs: Enable Gnome2::Rsvg::new_gz.  Still untested because
+	it doesn't seem to work.
+
+2003/12/25 02:41 (+0100) kaffeetisch
+
+	A .cvsignore
+	A LICENSE
+	A MANIFEST
+	A MANIFEST.SKIP
+	A META.yml
+	A Makefile.PL
+	A README
+	A Rsvg.pm
+	A genmaps.pl
+	A maps
+	A rsvg2perl.c
+	A rsvg2perl.h
+	A t/Rsvg.t
+	A t/window.svg
+	A t/window.svg.gz
+	A xs/.cvsignore
+	A xs/Rsvg.xs: Initial import.

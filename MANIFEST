@@ -1,0 +1,17 @@
+ChangeLog
+LICENSE
+MANIFEST			This list of files
+MANIFEST.SKIP
+META.yml			Module meta-data (added by MakeMaker)
+Makefile.PL
+README
+Rsvg.pm
+genmaps.pl
+maps
+perl-Gnome2-Rsvg.spec.in
+rsvg2perl.c
+rsvg2perl.h
+t/Rsvg.t
+t/window.svg
+t/window.svg.gz
+xs/Rsvg.xs

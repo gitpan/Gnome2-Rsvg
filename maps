@@ -1,0 +1,2 @@
+RSVG2PERL_TYPE_ERROR	RsvgError	GEnum	Gnome2::Rsvg::Error
+RSVG2PERL_TYPE_RSVG_HANDLE	RsvgHandle	GBoxed	Gnome2::Rsvg::Handle
