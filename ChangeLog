@@ -1,3 +1,27 @@
+2004/07/24 19:34 (+0200) kaffeetisch
+
+	* NEWS, Rsvg.pm: Version 0.03.
+
+2004/07/24 19:29 (+0200) kaffeetisch
+
+	* t/Rsvg.t: Make the tests work on older versions of librsvg.
+
+2004/07/23 21:13 (+0200) kaffeetisch
+
+	* t/Rsvg.t
+	* xs/Rsvg.xs: Bind and test rsvg_set_default_dpi_x_y and
+	rsvg_handle_set_dpi_x_y.  Make using gzip'ed SVGs work by allowing
+	\0s in the data passed to Gnome2::Rsvg::Handle::write.
+
+	* xs/Rsvg.xs: undef RSVG_DISABLE_DEPRECATED to make sure we get
+	some functions that were deprecated.
+
+2004/06/14 19:34 (+0200) kaffeetisch
+
+	* t/Rsvg.t
+	* xs/Rsvg.xs: Bind and test Gnome2::Rsvg::Handle::get_title and
+	get_desc.
+
 2004/06/05 00:49 (+0200) kaffeetisch
 
 	A NEWS

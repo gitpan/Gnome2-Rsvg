@@ -15,8 +15,12 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/xs/Rsvg.xs,v 1.3 2004/05/17 16:06:41 kaffeetisch Exp $
+ * $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/xs/Rsvg.xs,v 1.5 2004/07/23 19:17:19 kaffeetisch Exp $
  */
+
+/* Make sure we get rsvg_set_default_dpi and rsvg_handle_set_dpi which were
+   deprecated after we wrapped them. */
+#undef RSVG_DISABLE_DEPRECATED
 
 #include "rsvg2perl.h"
 #include <gperl_marshal.h>
@@ -193,6 +197,18 @@ rsvg_pixbuf_from_file_at_zoom_with_max (class, file_name, x_zoom, y_zoom, max_wi
     CLEANUP:
 	gdk_pixbuf_unref (RETVAL);
 
+#if LIBRSVG_CHECK_VERSION (2, 7, 5) /* FIXME: 2.8 */
+
+##  void rsvg_set_default_dpi_x_y (double dpi_x, double dpi_y)
+void
+rsvg_set_default_dpi_x_y (class, dpi_x, dpi_y)
+	double dpi_x
+	double dpi_y
+    C_ARGS:
+	dpi_x, dpi_y
+
+#endif /* 2.8.0 */
+
 MODULE = Gnome2::Rsvg	PACKAGE = Gnome2::Rsvg::Handle	PREFIX = rsvg_
 
 #if LIBRSVG_CHECK_VERSION(2, 2, 2)
@@ -330,13 +346,16 @@ rsvg_handle_set_size_callback (handle, size_func, user_data=NULL)
 
 ##  gboolean rsvg_handle_write (RsvgHandle *handle, const guchar *buf, gsize count, GError **error) 
 gboolean
-rsvg_handle_write (handle, buf)
+rsvg_handle_write (handle, data)
 	RsvgHandle *handle
-	const guchar *buf
+	SV *data
     PREINIT:
+	const guchar *buf = NULL;
+	STRLEN len;
         GError *error = NULL;
     CODE:
-	RETVAL = rsvg_handle_write (handle, buf, strlen (buf), &error);
+	buf = SvPV (data, len);
+	RETVAL = rsvg_handle_write (handle, buf, len, &error);
         if (error)
 		gperl_croak_gerror (NULL, error);
     OUTPUT:
@@ -359,5 +378,30 @@ rsvg_handle_close (handle)
 GdkPixbuf *
 rsvg_handle_get_pixbuf (handle)
 	RsvgHandle *handle
+
+#if LIBRSVG_CHECK_VERSION (2, 4, 0)
+
+##  G_CONST_RETURN char* rsvg_handle_get_title (RsvgHandle *handle)
+const char*
+rsvg_handle_get_title (handle)
+	RsvgHandle *handle
+
+##  G_CONST_RETURN char* rsvg_handle_get_desc (RsvgHandle *handle)
+const char*
+rsvg_handle_get_desc (handle)
+	RsvgHandle *handle
+
+#endif /* 2.4.0 */
+
+#if LIBRSVG_CHECK_VERSION (2, 7, 5) /* FIXME: 2.8 */
+
+##  void rsvg_handle_set_dpi_x_y (RsvgHandle *handle, double dpi_x, double dpi_y)
+void
+rsvg_handle_set_dpi_x_y (handle, dpi_x, dpi_y)
+	RsvgHandle *handle
+	double dpi_x
+	double dpi_y
+
+#endif /* 2.8.0 */
 
 ##  void rsvg_handle_free (RsvgHandle *handle) 

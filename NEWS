@@ -1,3 +1,10 @@
+Overview of changes in Gnome2::Rsvg 0.03
+========================================
+
+* Bind and test rsvg_handle_get_title, rsvg_handle_get_desc,
+  rsvg_set_default_dpi_x_y, and rsvg_handle_set_dpi_x_y.
+* Make using gzip'ed images work by not using strlen() in Gnome2::Rsvg::write.
+
 Overview of changes in Gnome2::Rsvg 0.02
 ========================================
 
