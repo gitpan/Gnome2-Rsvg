@@ -15,7 +15,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/xs/Rsvg.xs,v 1.2 2003/12/29 02:20:31 kaffeetisch Exp $
+ * $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/xs/Rsvg.xs,v 1.3 2004/05/17 16:06:41 kaffeetisch Exp $
  */
 
 #include "rsvg2perl.h"
@@ -76,7 +76,28 @@ BOOT:
 #include "register.xsh"
 #include "boot.xsh"
 
+void
+GET_VERSION_INFO (class)
+    PPCODE:
+	EXTEND (SP, 3);
+	PUSHs (sv_2mortal (newSViv (LIBRSVG_MAJOR_VERSION)));
+	PUSHs (sv_2mortal (newSViv (LIBRSVG_MINOR_VERSION)));
+	PUSHs (sv_2mortal (newSViv (LIBRSVG_MICRO_VERSION)));
+	PERL_UNUSED_VAR (ax);
+
+bool
+CHECK_VERSION (class, major, minor, micro)
+	int major
+	int minor
+	int micro
+    CODE:
+	RETVAL = LIBRSVG_CHECK_VERSION (major, minor, micro);
+    OUTPUT:
+	RETVAL
+
 ##  GQuark rsvg_error_quark (void) G_GNUC_CONST 
+
+#if LIBRSVG_CHECK_VERSION(2, 2, 0)
 
 ##  void rsvg_set_default_dpi (double dpi) 
 void
@@ -84,6 +105,8 @@ rsvg_set_default_dpi (class, dpi)
 	double dpi
     C_ARGS:
 	dpi
+
+#endif
 
 ##  GdkPixbuf *rsvg_pixbuf_from_file (const gchar *file_name, GError **error) 
 GdkPixbuf *
@@ -171,6 +194,8 @@ rsvg_pixbuf_from_file_at_zoom_with_max (class, file_name, x_zoom, y_zoom, max_wi
 	gdk_pixbuf_unref (RETVAL);
 
 MODULE = Gnome2::Rsvg	PACKAGE = Gnome2::Rsvg::Handle	PREFIX = rsvg_
+
+#if LIBRSVG_CHECK_VERSION(2, 2, 2)
 
 ##  GdkPixbuf * rsvg_pixbuf_from_file_ex (RsvgHandle * handle, const gchar *file_name, GError **error) 
 GdkPixbuf *
@@ -262,6 +287,8 @@ rsvg_pixbuf_from_file_at_zoom_with_max_ex (handle, file_name, x_zoom, y_zoom, ma
     CLEANUP:
 	gdk_pixbuf_unref (RETVAL);
 
+#endif /* 2.2.0 */
+
 MODULE = Gnome2::Rsvg	PACKAGE = Gnome2::Rsvg::Handle	PREFIX = rsvg_handle_
 
 ##  RsvgHandle *rsvg_handle_new (void) 
@@ -269,6 +296,8 @@ RsvgHandle_own *
 rsvg_handle_new (class)
     C_ARGS:
 	/* void */
+
+#if LIBRSVG_CHECK_VERSION(2, 2, 0)
 
 ##  RsvgHandle *rsvg_handle_new_gz (void) 
 RsvgHandle_own *
@@ -281,6 +310,8 @@ void
 rsvg_handle_set_dpi (handle, dpi)
 	RsvgHandle * handle
 	double dpi
+
+#endif
 
 ##  void rsvg_handle_set_size_callback (RsvgHandle *handle, RsvgSizeFunc size_func, gpointer user_data, GDestroyNotify user_data_destroy) 
 void

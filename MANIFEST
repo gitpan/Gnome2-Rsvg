@@ -4,8 +4,10 @@ MANIFEST			This list of files
 MANIFEST.SKIP
 META.yml			Module meta-data (added by MakeMaker)
 Makefile.PL
+NEWS
 README
 Rsvg.pm
+copyright.pod
 genmaps.pl
 maps
 perl-Gnome2-Rsvg.spec.in

@@ -1,8 +1,8 @@
 				 Gnome2::Rsvg
 				--------------
 
-This module allows you to use the Raster Scalable Vector Graphics library
-(librsvg for short) from Perl.
+This module allows you to use the Scalable Vector Graphics library (librsvg for
+short) from Perl.
 
 The index of the automatically generated API documentation can be accessed
 with:
@@ -27,5 +27,5 @@ Gnome2::Rsvg depends on:
   ExtUtils::Depends
   ExtUtils::PkgConfig
   Glib >= 1.01
-  Gtk2 >= 1.00
+  Gtk2 >= 1.01
   librsvg

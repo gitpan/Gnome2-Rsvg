@@ -15,7 +15,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/rsvg2perl.h,v 1.1 2003/12/25 01:47:48 kaffeetisch Exp $
+ * $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/rsvg2perl.h,v 1.2 2004/05/17 16:06:34 kaffeetisch Exp $
  */
 
 #ifndef _RSVG2PERL_H_
@@ -23,10 +23,14 @@
 
 #include <gtk2perl.h>
 #include <librsvg/rsvg.h>
+
+#include "rsvg2perl-version.h"
+
+#if LIBRSVG_CHECK_VERSION(2, 2, 0)
 #include <librsvg/rsvg-gz.h>
+#endif
 
 #include "rsvg2perl-gtypes.h"
-#include "rsvg2perl-version.h"
 
 #define RSVG2PERL_TYPE_RSVG_HANDLE (rsvg2perl_rsvg_handle_get_type ())
 GType rsvg2perl_rsvg_handle_get_type (void) G_GNUC_CONST;

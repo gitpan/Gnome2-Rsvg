@@ -1,0 +1,5 @@
+Overview of changes in Gnome2::Rsvg 0.02
+========================================
+
+* Miscellaneous small infrastructure and documentation improvements.
+* Improved compatability with older versions of librsvg.

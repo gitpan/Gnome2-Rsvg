@@ -1,3 +1,41 @@
+2004/06/05 00:49 (+0200) kaffeetisch
+
+	A NEWS
+	* MANIFEST
+	* README
+	* Rsvg.pm: Version 0.02.
+
+2004/05/17 18:03 (+0200) kaffeetisch
+
+	* rsvg2perl.h: Only include <librsvg/rsvg-gz.h> if it's available.
+
+	* t/Rsvg.t: Be a bit more tolerant to pass on older versions.
+	Skip some tests if they're not available in the version we're
+	compiling against.
+
+	* xs/Rsvg.xs: Implement CHECK_VERSION and GET_VERSION_INFO.
+	Protect set_default_dpi, *_ex, new_gz, and set_dpi with version
+	macros.
+
+2004/02/14 16:39 (+0100) kaffeetisch
+
+	A copyright.pod
+	* Makefile.PL: Switch to the new EU::Depends and ::PkgConfig
+	versions.
+
+2004/01/27 20:56 (+0100) kaffeetisch
+
+	* README
+	* Rsvg.pm: Strip the "Raster" in "Raster Scalable Vector
+	Graphics".
+
+2004/01/24 21:44 (-0500) rwmcfa1
+
+	* Makefile.PL: removed runtime_reqs stuff, replaced by the pkg-config 
+	trick
+	
+	* perl-Gnome2-Rsvg.spec.in: use pkg-config for Requires version
+
 2004/01/02 15:09 (-0500) rwmcfa1
 
 	* Makefile.PL: rpm stuff added

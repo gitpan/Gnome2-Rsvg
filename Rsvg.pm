@@ -1,4 +1,4 @@
-# $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/Rsvg.pm,v 1.1 2003/12/25 01:47:48 kaffeetisch Exp $
+# $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/Rsvg.pm,v 1.3 2004/06/04 22:50:12 kaffeetisch Exp $
 
 package Gnome2::Rsvg;
 
@@ -12,7 +12,7 @@ use Gtk2;
 require DynaLoader;
 
 our @ISA = qw(DynaLoader);
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub dl_load_flags { 0x01 }
 
@@ -54,8 +54,8 @@ Gnome2::Rsvg - Perl interface to the RSVG library
 
 =head1 ABSTRACT
 
-This module allows a Perl developer to use the Raster Scalable Vector Graphics
-library (librsvg for short).
+This module allows a Perl developer to use the Scalable Vector Graphics library
+(librsvg for short).
 
 =head1 SEE ALSO
 

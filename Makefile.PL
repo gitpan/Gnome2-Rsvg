@@ -5,24 +5,20 @@ use ExtUtils::MakeMaker;
 use Cwd;
 use File::Spec;
 
-# $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/Makefile.PL,v 1.2 2004/01/02 20:50:28 rwmcfa1 Exp $
+# $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/Makefile.PL,v 1.4 2004/02/14 15:40:10 kaffeetisch Exp $
 
 our %build_reqs = (
-  'perl-ExtUtils-Depends'   => '0.1',
-  'perl-ExtUtils-PkgConfig' => '0.1',
+  'perl-ExtUtils-Depends'   => '0.20',
+  'perl-ExtUtils-PkgConfig' => '1.03',
   'perl-Glib'               => '1.01',
   'perl-Gtk2'               => '1.01',
   'Rsvg'                    => '2.0.0',
 );
 
-# minimum required version of dependancies we need to run
-our %runtime_reqs = (
-	'Rsvg' => undef,
-);
-
-unless (eval "use ExtUtils::Depends;"
-           . "use ExtUtils::PkgConfig;"
+unless (eval "use ExtUtils::Depends $build_reqs{'perl-ExtUtils-Depends'};"
+           . "use ExtUtils::PkgConfig $build_reqs{'perl-ExtUtils-PkgConfig'};"
            . "use Glib '$build_reqs{'perl-Glib'}';"
+           . "use Gtk2 '$build_reqs{'perl-Gtk2'}';"
            . "use Glib::MakeHelper;"
 	   . "use Gtk2::CodeGen;"
            . "1") {
@@ -40,8 +36,6 @@ unless (eval "use ExtUtils::Depends;"
 }
 
 my %rsvg_pkgcfg = ExtUtils::PkgConfig->find("librsvg-2.0 >= $build_reqs{Rsvg}");
-
-$runtime_reqs{Rsvg} = $rsvg_pkgcfg{modversion};
 
 ###############################################################################
 
@@ -82,25 +76,20 @@ our %pod_files = (
 Gtk2::CodeGen->parse_maps ('rsvg2perl');
 Gtk2::CodeGen->write_boot (ignore => qr/^Gnome2::Rsvg$/);
 
-open VERSION, ">build/rsvg2perl-version.h" or die("Opening '>build/rsvg2perl-version.h': $!");
-my $stem = "LIBRSVG";
-print VERSION "#define $stem\_CHECK_VERSION(major,minor,micro) \\\n"
-	    . "    ($stem\_MAJOR_VERSION > (major) || \\\n"
-	    . "     ($stem\_MAJOR_VERSION == (major) && $stem\_MINOR_VERSION > (minor)) || \\\n"
-	    . "     ($stem\_MAJOR_VERSION == (major) && $stem\_MINOR_VERSION == (minor) && \\\n"
-	    . "      $stem\_MICRO_VERSION >= (micro)))\n";
-close VERSION;
+ExtUtils::PkgConfig->write_version_macros (
+  "build/rsvg2perl-version.h",
+  "librsvg-2.0" => "LIBRSVG",
+);
 
 ###############################################################################
 
-my $rsvg = ExtUtils::Depends->new ('Gnome2::Rsvg', 'Gtk2', 'Glib');
+my $rsvg = ExtUtils::Depends->new ('Gnome2::Rsvg', 'Gtk2');
 $rsvg->set_inc ($rsvg_pkgcfg{cflags});
 $rsvg->set_libs ($rsvg_pkgcfg{libs});
 $rsvg->add_xs (@xs_files);
 $rsvg->add_c ("rsvg2perl.c", "build/rsvg2perl-gtypes.c");
 $rsvg->add_pm ('Rsvg.pm' => '$(INST_LIBDIR)/Rsvg.pm');
 $rsvg->add_typemaps (map {File::Spec->catfile(cwd(), $_)} 'build/rsvg2perl.typemap');
-$rsvg->add_headers ('rsvg2perl.h');
 
 $rsvg->install (qw(rsvg2perl.h
                    build/rsvg2perl-autogen.h
@@ -119,14 +108,13 @@ WriteMakefile(
 
 ###############################################################################
 
-package MY;
-
-sub postamble
-{
+sub MY::postamble {
   return Glib::MakeHelper->postamble_clean ()
-       . Glib::MakeHelper->postamble_docs (@main::xs_files)
+       . Glib::MakeHelper->postamble_docs_full (
+		DEPENDS => $rsvg,
+		COPYRIGHT_FROM => 'copyright.pod'
+         )
        . Glib::MakeHelper->postamble_rpms (
-		'GNOME_RSVG_RUN' => $runtime_reqs{'Rsvg'},
 		'GNOME_RSVG' => $build_reqs{'Rsvg'},
 		'PERL_EXTUTILS_DEPENDS' => 
 			$build_reqs{'perl-ExtUtils-Depends'},
@@ -136,5 +124,3 @@ sub postamble
 		'PERL_GTK' => $build_reqs{'perl-Gtk2'},
 	);
 }
-
-package MAIN;
