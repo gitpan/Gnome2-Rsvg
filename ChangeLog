@@ -1,3 +1,37 @@
+2005/02/24	kaffeetisch
+
+	* META.yml, NEWS, Rsvg.pm: Version 0.04.
+
+2005/01/27 20:17 (+0100) kaffeetisch
+
+	* Rsvg.t: Use absolute paths to fix test failures.
+
+2004/10/24 11:55 (-0400) rwmcfa1
+
+	* MANIFEST.SKIP: updates
+
+	* perl-Gnome2-Rsvg.spec.in: new scheme that addresses x86_64 problems
+	found by Carl Nygard
+
+2004/09/17 19:36 (+0200) kaffeetisch
+
+	* Makefile.PL, README: Depend on the stable 1.02 instead of the
+	unstable 1.01 series of Glib and Gtk2.
+
+2004/09/15 13:12 (+0200) kaffeetisch
+
+	* t/Rsvg.t, t/window.svg, xs/Rsvg.xs: Bind and test
+	rsvg_handle_set_base_uri, rsvg_handle_get_base_uri and
+	rsvg_handle_get_metadata.  Adjust version checks to refer to
+	stable releases.
+
+2004/09/09 13:53 (+0200) kaffeetisch
+
+	* NEWS: Fix an error.
+
+	* t/Rsvg.t, t/window.svg: Work around a librsvg bug by using
+	<title> and <desc> tags.
+
 2004/07/24 19:34 (+0200) kaffeetisch
 
 	* NEWS, Rsvg.pm: Version 0.03.
@@ -57,7 +91,7 @@
 
 	* Makefile.PL: removed runtime_reqs stuff, replaced by the pkg-config 
 	trick
-	
+
 	* perl-Gnome2-Rsvg.spec.in: use pkg-config for Requires version
 
 2004/01/02 15:09 (-0500) rwmcfa1

@@ -5,13 +5,13 @@ use ExtUtils::MakeMaker;
 use Cwd;
 use File::Spec;
 
-# $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/Makefile.PL,v 1.4 2004/02/14 15:40:10 kaffeetisch Exp $
+# $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/Makefile.PL,v 1.5 2004/09/17 17:38:01 kaffeetisch Exp $
 
 our %build_reqs = (
   'perl-ExtUtils-Depends'   => '0.20',
   'perl-ExtUtils-PkgConfig' => '1.03',
-  'perl-Glib'               => '1.01',
-  'perl-Gtk2'               => '1.01',
+  'perl-Glib'               => '1.02',
+  'perl-Gtk2'               => '1.02',
   'Rsvg'                    => '2.0.0',
 );
 

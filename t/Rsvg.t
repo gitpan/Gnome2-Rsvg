@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
-use Test::More tests => 183;
+use Test::More tests => 188;
 use Gnome2::Rsvg;
 
 my $number = qr/^\d+$/;
@@ -48,17 +48,22 @@ SKIP: {
   skip("get_title and get_desc are new in 2.4", 2)
     unless (Gnome2::Rsvg -> CHECK_VERSION(2, 4, 0));
 
-  ok(defined($handle -> get_title()));
-  ok(defined($handle -> get_desc()));
+  is($handle -> get_title(), "Urgs");
+  is($handle -> get_desc(), "Urgs");
 }
 
 ###############################################################################
 
-foreach (Gnome2::Rsvg -> pixbuf_from_file($svg),
-         Gnome2::Rsvg -> pixbuf_from_file_at_zoom($svg, 1.5, 1.5),
-         Gnome2::Rsvg -> pixbuf_from_file_at_size($svg, 23, 42),
-         Gnome2::Rsvg -> pixbuf_from_file_at_max_size($svg, 23, 42),
-         Gnome2::Rsvg -> pixbuf_from_file_at_zoom_with_max($svg, 1.5, 1.5, 23, 42)) {
+use Cwd qw(cwd);
+my $uri = cwd() . "/" . $svg;
+
+# Bug in librsvg: no relative pathes?
+
+foreach (Gnome2::Rsvg -> pixbuf_from_file($uri),
+         Gnome2::Rsvg -> pixbuf_from_file_at_zoom($uri, 1.5, 1.5),
+         Gnome2::Rsvg -> pixbuf_from_file_at_size($uri, 23, 42),
+         Gnome2::Rsvg -> pixbuf_from_file_at_max_size($uri, 23, 42),
+         Gnome2::Rsvg -> pixbuf_from_file_at_zoom_with_max($uri, 1.5, 1.5, 23, 42)) {
   isa_ok($_, "Gtk2::Gdk::Pixbuf");
 }
 
@@ -100,27 +105,38 @@ SKIP: {
     unless (Gnome2::Rsvg -> CHECK_VERSION(2, 2, 2));
 
   $handle = Gnome2::Rsvg::Handle -> new();
-  isa_ok($handle -> pixbuf_from_file_ex($svg), "Gtk2::Gdk::Pixbuf");
+  isa_ok($handle -> pixbuf_from_file_ex($uri), "Gtk2::Gdk::Pixbuf");
 
   $handle = Gnome2::Rsvg::Handle -> new();
-  isa_ok($handle -> pixbuf_from_file_at_zoom_ex($svg, 1.5, 1.5), "Gtk2::Gdk::Pixbuf");
+  isa_ok($handle -> pixbuf_from_file_at_zoom_ex($uri, 1.5, 1.5), "Gtk2::Gdk::Pixbuf");
 
   $handle = Gnome2::Rsvg::Handle -> new();
-  isa_ok($handle -> pixbuf_from_file_at_size_ex($svg, 23, 42), "Gtk2::Gdk::Pixbuf");
+  isa_ok($handle -> pixbuf_from_file_at_size_ex($uri, 23, 42), "Gtk2::Gdk::Pixbuf");
 
   $handle = Gnome2::Rsvg::Handle -> new();
-  isa_ok($handle -> pixbuf_from_file_at_max_size_ex($svg, 23, 42), "Gtk2::Gdk::Pixbuf");
+  isa_ok($handle -> pixbuf_from_file_at_max_size_ex($uri, 23, 42), "Gtk2::Gdk::Pixbuf");
 
   $handle = Gnome2::Rsvg::Handle -> new();
-  isa_ok($handle -> pixbuf_from_file_at_zoom_with_max_ex($svg, 1.5, 1.5, 23, 42), "Gtk2::Gdk::Pixbuf");
+  isa_ok($handle -> pixbuf_from_file_at_zoom_with_max_ex($uri, 1.5, 1.5, 23, 42), "Gtk2::Gdk::Pixbuf");
 }
 
 ###############################################################################
 
 SKIP: {
   skip("set_default_dpi_x_y and set_dpi_x_y are new in 2.8", 0)
-    unless (Gnome2::Rsvg -> CHECK_VERSION(2, 7, 5)); # FIXME: 2.8
+    unless (Gnome2::Rsvg -> CHECK_VERSION(2, 8, 0));
 
   Gnome2::Rsvg -> set_default_dpi_x_y(96, 96);
   $handle -> set_dpi_x_y(96, 96);
+}
+
+SKIP: {
+  skip("[sg]et_base_uri and get_metadata are new in 2.10", 2)
+    unless (Gnome2::Rsvg -> CHECK_VERSION(2, 9, 0)); # FIXME: 2.10.
+
+  Gnome2::Rsvg -> set_default_dpi_x_y(96, 96);
+  $handle -> set_base_uri("file:///tmp/window.svg");
+  is($handle -> get_base_uri(), "file:///tmp/window.svg");
+
+  is($handle -> get_metadata(), "Urgs");
 }

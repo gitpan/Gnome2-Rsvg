@@ -15,7 +15,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/xs/Rsvg.xs,v 1.5 2004/07/23 19:17:19 kaffeetisch Exp $
+ * $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/xs/Rsvg.xs,v 1.6 2004/09/15 11:14:59 kaffeetisch Exp $
  */
 
 /* Make sure we get rsvg_set_default_dpi and rsvg_handle_set_dpi which were
@@ -393,7 +393,7 @@ rsvg_handle_get_desc (handle)
 
 #endif /* 2.4.0 */
 
-#if LIBRSVG_CHECK_VERSION (2, 7, 5) /* FIXME: 2.8 */
+#if LIBRSVG_CHECK_VERSION (2, 8, 0)
 
 ##  void rsvg_handle_set_dpi_x_y (RsvgHandle *handle, double dpi_x, double dpi_y)
 void
@@ -404,4 +404,24 @@ rsvg_handle_set_dpi_x_y (handle, dpi_x, dpi_y)
 
 #endif /* 2.8.0 */
 
-##  void rsvg_handle_free (RsvgHandle *handle) 
+#if LIBRSVG_CHECK_VERSION (2, 9, 0) /* FIXME: 2.10. */
+
+##  void rsvg_handle_set_base_uri (RsvgHandle *handle, const char *base_uri)
+void
+rsvg_handle_set_base_uri (handle, base_uri)
+	RsvgHandle *handle
+	const char *base_uri
+
+##  const char * rsvg_handle_get_base_uri (RsvgHandle *handle)
+const char_ornull *
+rsvg_handle_get_base_uri (handle)
+	RsvgHandle *handle
+
+##  const char * rsvg_handle_get_metadata (RsvgHandle *handle)
+const char_ornull *
+rsvg_handle_get_metadata (handle)
+	RsvgHandle *handle
+
+#endif /* 2.10.0 */
+
+##  void rsvg_handle_free (RsvgHandle *handle)
