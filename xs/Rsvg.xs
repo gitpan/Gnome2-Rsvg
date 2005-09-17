@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 by the gtk2-perl team
+ * Copyright (C) 2003-2005 by the gtk2-perl team
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,12 +15,8 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/xs/Rsvg.xs,v 1.6 2004/09/15 11:14:59 kaffeetisch Exp $
+ * $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/xs/Rsvg.xs,v 1.8 2005/09/17 19:45:24 kaffeetisch Exp $
  */
-
-/* Make sure we get rsvg_set_default_dpi and rsvg_handle_set_dpi which were
-   deprecated after we wrapped them. */
-#undef RSVG_DISABLE_DEPRECATED
 
 #include "rsvg2perl.h"
 #include <gperl_marshal.h>
@@ -100,17 +96,6 @@ CHECK_VERSION (class, major, minor, micro)
 	RETVAL
 
 ##  GQuark rsvg_error_quark (void) G_GNUC_CONST 
-
-#if LIBRSVG_CHECK_VERSION(2, 2, 0)
-
-##  void rsvg_set_default_dpi (double dpi) 
-void
-rsvg_set_default_dpi (class, dpi)
-	double dpi
-    C_ARGS:
-	dpi
-
-#endif
 
 ##  GdkPixbuf *rsvg_pixbuf_from_file (const gchar *file_name, GError **error) 
 GdkPixbuf *
@@ -197,137 +182,26 @@ rsvg_pixbuf_from_file_at_zoom_with_max (class, file_name, x_zoom, y_zoom, max_wi
     CLEANUP:
 	gdk_pixbuf_unref (RETVAL);
 
-#if LIBRSVG_CHECK_VERSION (2, 7, 5) /* FIXME: 2.8 */
-
-##  void rsvg_set_default_dpi_x_y (double dpi_x, double dpi_y)
+##  void rsvg_set_default_dpi (double dpi,)
 void
-rsvg_set_default_dpi_x_y (class, dpi_x, dpi_y)
-	double dpi_x
-	double dpi_y
+rsvg_set_default_dpi (class, dpi)
+	double dpi
     C_ARGS:
-	dpi_x, dpi_y
-
-#endif /* 2.8.0 */
-
-MODULE = Gnome2::Rsvg	PACKAGE = Gnome2::Rsvg::Handle	PREFIX = rsvg_
-
-#if LIBRSVG_CHECK_VERSION(2, 2, 2)
-
-##  GdkPixbuf * rsvg_pixbuf_from_file_ex (RsvgHandle * handle, const gchar *file_name, GError **error) 
-GdkPixbuf *
-rsvg_pixbuf_from_file_ex (handle, file_name)
-	RsvgHandle * handle
-	const gchar *file_name
-    PREINIT:
-        GError *error = NULL;
-    CODE:
-	RETVAL = rsvg_pixbuf_from_file_ex (handle, file_name, &error);
-        if (error)
-		gperl_croak_gerror (file_name, error);
-    OUTPUT:
-	RETVAL
-    CLEANUP:
-	gdk_pixbuf_unref (RETVAL);
-
-##  GdkPixbuf * rsvg_pixbuf_from_file_at_zoom_ex (RsvgHandle * handle, const gchar *file_name, double x_zoom, double y_zoom, GError **error) 
-GdkPixbuf *
-rsvg_pixbuf_from_file_at_zoom_ex (handle, file_name, x_zoom, y_zoom)
-	RsvgHandle * handle
-	const gchar *file_name
-	double x_zoom
-	double y_zoom
-    PREINIT:
-        GError *error = NULL;
-    CODE:
-	RETVAL = rsvg_pixbuf_from_file_at_zoom_ex (handle, file_name, x_zoom, y_zoom, &error);
-        if (error)
-		gperl_croak_gerror (file_name, error);
-    OUTPUT:
-	RETVAL
-    CLEANUP:
-	gdk_pixbuf_unref (RETVAL);
-
-##  GdkPixbuf * rsvg_pixbuf_from_file_at_size_ex (RsvgHandle * handle, const gchar *file_name, gint width, gint height, GError **error) 
-GdkPixbuf *
-rsvg_pixbuf_from_file_at_size_ex (handle, file_name, width, height)
-	RsvgHandle * handle
-	const gchar *file_name
-	gint width
-	gint height
-    PREINIT:
-        GError *error = NULL;
-    CODE:
-	RETVAL = rsvg_pixbuf_from_file_at_size_ex (handle, file_name, width, height, &error);
-        if (error)
-		gperl_croak_gerror (file_name, error);
-    OUTPUT:
-	RETVAL
-    CLEANUP:
-	gdk_pixbuf_unref (RETVAL);
-
-##  GdkPixbuf * rsvg_pixbuf_from_file_at_max_size_ex (RsvgHandle * handle, const gchar *file_name, gint max_width, gint max_height, GError **error) 
-GdkPixbuf *
-rsvg_pixbuf_from_file_at_max_size_ex (handle, file_name, max_width, max_height)
-	RsvgHandle * handle
-	const gchar *file_name
-	gint max_width
-	gint max_height
-    PREINIT:
-        GError *error = NULL;
-    CODE:
-	RETVAL = rsvg_pixbuf_from_file_at_max_size_ex (handle, file_name, max_width, max_height, &error);
-        if (error)
-		gperl_croak_gerror (file_name, error);
-    OUTPUT:
-	RETVAL
-    CLEANUP:
-	gdk_pixbuf_unref (RETVAL);
-
-##  GdkPixbuf * rsvg_pixbuf_from_file_at_zoom_with_max_ex (RsvgHandle * handle, const gchar *file_name, double x_zoom, double y_zoom, gint max_width, gint max_height, GError **error) 
-GdkPixbuf *
-rsvg_pixbuf_from_file_at_zoom_with_max_ex (handle, file_name, x_zoom, y_zoom, max_width, max_height)
-	RsvgHandle * handle
-	const gchar *file_name
-	double x_zoom
-	double y_zoom
-	gint max_width
-	gint max_height
-    PREINIT:
-        GError *error = NULL;
-    CODE:
-	RETVAL = rsvg_pixbuf_from_file_at_zoom_with_max_ex (handle, file_name, x_zoom, y_zoom, max_width, max_height, &error);
-        if (error)
-		gperl_croak_gerror (file_name, error);
-    OUTPUT:
-	RETVAL
-    CLEANUP:
-	gdk_pixbuf_unref (RETVAL);
-
-#endif /* 2.2.0 */
+	dpi
 
 MODULE = Gnome2::Rsvg	PACKAGE = Gnome2::Rsvg::Handle	PREFIX = rsvg_handle_
 
 ##  RsvgHandle *rsvg_handle_new (void) 
-RsvgHandle_own *
+RsvgHandle *
 rsvg_handle_new (class)
     C_ARGS:
 	/* void */
 
-#if LIBRSVG_CHECK_VERSION(2, 2, 0)
-
-##  RsvgHandle *rsvg_handle_new_gz (void) 
-RsvgHandle_own *
-rsvg_handle_new_gz (class)
-    C_ARGS:
-	/* void */
-
-##  void rsvg_handle_set_dpi (RsvgHandle * handle, double dpi) 
 void
-rsvg_handle_set_dpi (handle, dpi)
-	RsvgHandle * handle
-	double dpi
-
-#endif
+DESTROY (handle)
+	RsvgHandle *handle
+    CODE:
+	rsvg_handle_free (handle);
 
 ##  void rsvg_handle_set_size_callback (RsvgHandle *handle, RsvgSizeFunc size_func, gpointer user_data, GDestroyNotify user_data_destroy) 
 void
@@ -393,16 +267,11 @@ rsvg_handle_get_desc (handle)
 
 #endif /* 2.4.0 */
 
-#if LIBRSVG_CHECK_VERSION (2, 8, 0)
-
-##  void rsvg_handle_set_dpi_x_y (RsvgHandle *handle, double dpi_x, double dpi_y)
+##  void rsvg_handle_set_dpi (RsvgHandle *handle, double dpi)
 void
-rsvg_handle_set_dpi_x_y (handle, dpi_x, dpi_y)
+rsvg_handle_set_dpi (handle, dpi)
 	RsvgHandle *handle
-	double dpi_x
-	double dpi_y
-
-#endif /* 2.8.0 */
+	double dpi
 
 #if LIBRSVG_CHECK_VERSION (2, 9, 0) /* FIXME: 2.10. */
 

@@ -1,3 +1,10 @@
+Overview of changes in Gnome2::Rsvg 0.05
+========================================
+
+* Track API changes in librsvg: Remove rsvg_pixbuf_from_file_*_ex and
+  rsvg_handle_new_gz.  Require librsvg 2.12.0.
+* Change some internal implementation details, update some documentation.
+
 Overview of changes in Gnome2::Rsvg 0.04
 ========================================
 

@@ -1,3 +1,38 @@
+2005/09/17	kaffeetisch
+
+	* NEWS, README, Rsvg.pm: Version 0.05.
+
+2005/09/17	kaffeetisch
+
+	* Makefile.PL: Require librsvg 2.12.0 -- there were just too many
+	API changes.
+
+	* t/Rsvg.t, xs/Rsvg.xs: Revert the rsvg_set_default_dpi and
+	rsvg_handle_set_dpi change -- it was only valid for HEAD of
+	librsvg, but gnome-2-12-branch is what we care about.
+
+2005/07/28	kaffeetisch
+
+	* MANIFEST, META.yml: Remove META.yml from the repository -- let
+	MakeMaker generate it on 'make dist'.
+
+	* Makefile.PL: Depend on librsvg 2.99.0, i.e. HEAD of CVS.
+
+	* Rsvg.pm: Some comment and email updates.
+
+	* copyright.pod: Update for 2005.
+
+	* MANIFEST, genmaps.pl: Retire genmaps.pl.
+
+	* MANIFEST, Makefile.PL, maps, rsvg.typemap, rsvg2perl.c,
+	rsvg2perl.h: Get rid of the custom GType for the RsvgError enum,
+	and use a custom pointer typemap for RsvgHandle instead of a
+	custom GBoxed type.
+
+	* t/Rsvg.t, xs/Rsvg.xs: Adapt to upstream API changes: Update
+	rsvg_set_default_dpi and rsvg_handle_set_dpi, remove
+	rsvg_pixbuf_from_file_*_ex and rsvg_handle_new_gz.
+
 2005/02/24	kaffeetisch
 
 	* META.yml, NEWS, Rsvg.pm: Version 0.04.
