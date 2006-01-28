@@ -1,3 +1,20 @@
+2006/01/28	kaffeetisch
+
+	* NEWS, Rsvg.pm: Version 0.06.
+
+2006/01/28	kaffeetisch
+
+	* t/Rsvg.t: Make the size callback test more robust.
+
+2005/12/12	kaffeetisch
+
+	* xs/Rsvg.xs. Hush a compiler warning.
+
+2005/09/28	kaffeetisch
+
+	* xs/Rsvg.xs, t/Rsvg.t: Make version checks refer to stable
+	releases.
+
 2005/09/17	kaffeetisch
 
 	* NEWS, README, Rsvg.pm: Version 0.05.

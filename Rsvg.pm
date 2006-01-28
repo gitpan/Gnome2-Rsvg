@@ -1,4 +1,4 @@
-# $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/Rsvg.pm,v 1.7 2005/09/17 19:48:11 kaffeetisch Exp $
+# $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/Rsvg.pm,v 1.8 2006/01/28 18:21:32 kaffeetisch Exp $
 
 package Gnome2::Rsvg;
 
@@ -12,7 +12,7 @@ use Gtk2;
 require DynaLoader;
 
 our @ISA = qw(DynaLoader);
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 sub dl_load_flags { $^O eq 'darwin' ? 0x00 : 0x01 }
 

@@ -15,7 +15,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/xs/Rsvg.xs,v 1.8 2005/09/17 19:45:24 kaffeetisch Exp $
+ * $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/xs/Rsvg.xs,v 1.10 2005/12/12 18:50:24 kaffeetisch Exp $
  */
 
 #include "rsvg2perl.h"
@@ -228,7 +228,7 @@ rsvg_handle_write (handle, data)
 	STRLEN len;
         GError *error = NULL;
     CODE:
-	buf = SvPV (data, len);
+	buf = (const guchar *) SvPV (data, len);
 	RETVAL = rsvg_handle_write (handle, buf, len, &error);
         if (error)
 		gperl_croak_gerror (NULL, error);
@@ -273,7 +273,7 @@ rsvg_handle_set_dpi (handle, dpi)
 	RsvgHandle *handle
 	double dpi
 
-#if LIBRSVG_CHECK_VERSION (2, 9, 0) /* FIXME: 2.10. */
+#if LIBRSVG_CHECK_VERSION (2, 10, 0)
 
 ##  void rsvg_handle_set_base_uri (RsvgHandle *handle, const char *base_uri)
 void
