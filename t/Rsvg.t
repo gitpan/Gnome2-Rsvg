@@ -90,3 +90,16 @@ SKIP: {
 
   is($handle -> get_metadata(), "Urgs");
 }
+
+SKIP: {
+  skip("cairo integretaion is new in 2.14", 0)
+    unless (Gnome2::Rsvg -> CHECK_VERSION(2, 14, 0));
+
+  require Cairo;
+  Cairo->import;
+  my $surface = Cairo::ImageSurface -> create("argb32", 10, 10);
+  my $cr = Cairo::Context -> create($surface);
+
+  $handle -> render_cairo($cr);
+  $handle -> render_cairo_sub($cr, "linearGradient90");
+}

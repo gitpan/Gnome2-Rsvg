@@ -15,7 +15,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/xs/Rsvg.xs,v 1.10 2005/12/12 18:50:24 kaffeetisch Exp $
+ * $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/xs/Rsvg.xs,v 1.11 2006/12/30 19:07:41 kaffeetisch Exp $
  */
 
 #include "rsvg2perl.h"
@@ -293,4 +293,10 @@ rsvg_handle_get_metadata (handle)
 
 #endif /* 2.10.0 */
 
-##  void rsvg_handle_free (RsvgHandle *handle)
+#if LIBRSVG_CHECK_VERSION (2, 14, 0)
+
+void rsvg_handle_render_cairo (RsvgHandle *handle, cairo_t *cr);
+
+void rsvg_handle_render_cairo_sub(RsvgHandle *handle, cairo_t *cr, const char * id);
+
+#endif

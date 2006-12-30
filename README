@@ -29,3 +29,7 @@ Gnome2::Rsvg depends on:
   Glib >= 1.02
   Gtk2 >= 1.02
   librsvg >= 2.12.0
+
+If librsvg >= 2.14.0, we also depend on:
+
+  Cairo >= 1.00

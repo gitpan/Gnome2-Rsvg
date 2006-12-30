@@ -1,3 +1,19 @@
+2006-12-30	kaffeetisch
+
+	* MANIFEST, NEWS, README, Rsvg.pm: Version 0.10.
+
+2006-12-30	kaffeetisch
+
+	* Makefile.PL, rsvg2perl.h, t/Rsvg.t, xs/Rsvg.xs: If librsvg >=
+	2.14.0, add support for rsvg_handle_render_cairo and
+	rsvg_handle_render_cairo_sub.  This necessitates requiring the
+	Cairo Perl module, of course (if librsvg >= 2.14.0).
+
+2006-12-02	kaffeetisch
+
+	* doctypes, Makefile.PL: Install a doctypes file for
+	Gnome2::Rsvg::Handle.
+
 2006/01/28	kaffeetisch
 
 	* NEWS, Rsvg.pm: Version 0.06.

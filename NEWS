@@ -1,3 +1,8 @@
+Overview of changes in Gnome2::Rsvg 0.10
+========================================
+
+* Add support for rsvg_handle_render_cairo and rsvg_handle_render_cairo_sub.
+
 Overview of changes in Gnome2::Rsvg 0.06
 ========================================
 
