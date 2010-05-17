@@ -5,55 +5,58 @@ use ExtUtils::MakeMaker;
 use Cwd;
 use File::Spec;
 
-# $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/Makefile.PL,v 1.9 2006/12/30 19:07:38 kaffeetisch Exp $
-
-our %build_reqs = (
-  'perl-ExtUtils-Depends'   => '0.20',
-  'perl-ExtUtils-PkgConfig' => '1.03',
-  'perl-Glib'               => '1.02',
-  'perl-Gtk2'               => '1.02',
-  'perl-Cairo'              => '1.00', # if librsvg >= 2.14.0
-  'librsvg'                 => '2.12.0',
+my %BUILD_REQ = (
+  'librsvg-2.0' => '2.12.0',
 );
 
-our %pm_reqs = (
-  'Gtk2'                => $build_reqs{'perl-Gtk2'},
-  'Glib'                => $build_reqs{'perl-Glib'},
-  'ExtUtils::Depends'   => $build_reqs{'perl-ExtUtils-Depends'},
-  'ExtUtils::PkgConfig' => $build_reqs{'perl-ExtUtils-PkgConfig'},
+my %PREREQ_PM = (
+  'Gtk2'                => '1.02',
+  'Glib'                => '1.02',
+  'ExtUtils::Depends'   => '0.20',
+  'ExtUtils::PkgConfig' => '1.03',
 );
 
-unless (eval "use ExtUtils::Depends $build_reqs{'perl-ExtUtils-Depends'};"
-           . "use ExtUtils::PkgConfig $build_reqs{'perl-ExtUtils-PkgConfig'};"
-           . "use Glib '$build_reqs{'perl-Glib'}';"
-           . "use Gtk2 '$build_reqs{'perl-Gtk2'}';"
-           . "use Glib::MakeHelper;"
-	   . "use Gtk2::CodeGen;"
-           . "1") {
-  warn "$@\n";
-  WriteMakefile(
-    PREREQ_FATAL => 1,
-    PREREQ_PM    => \%pm_reqs,
-  );
-  exit 1; # not reached
+my $dep_success = eval <<"__EOE__";
+  use ExtUtils::Depends $PREREQ_PM{'ExtUtils::Depends'};
+  use ExtUtils::PkgConfig $PREREQ_PM{'ExtUtils::PkgConfig'};
+  use Glib '$PREREQ_PM{'Glib'}';
+  use Gtk2 '$PREREQ_PM{'Gtk2'}';
+  use Glib::MakeHelper;
+  use Gtk2::CodeGen;
+  1;
+__EOE__
+if (!$dep_success) {
+  warn $@;
+  exit 0;
 }
 
-my %rsvg_pkgcfg = ExtUtils::PkgConfig->find("librsvg-2.0 >= $build_reqs{librsvg}");
+my %rsvg_pkgcfg;
+my $cfg_success = eval {
+  %rsvg_pkgcfg = ExtUtils::PkgConfig->find (
+    "librsvg-2.0 >= $BUILD_REQ{'librsvg-2.0'}");
+  1;
+};
+if (!$cfg_success) {
+  warn $@;
+  exit 0;
+}
 
 ###############################################################################
 
-my $need_cairo = 0;
+my $CAIRO_PREREQ_PM = '1.00'; # if librsvg-2.0 >= 2.14.0
+
 my @rsvg_version = split /\./, $rsvg_pkgcfg{modversion};
-if ($rsvg_version[0] > 2 || ($rsvg_version[0] == 2 && $rsvg_version[1] >= 14)) {
-  $need_cairo = 1;
-  $pm_reqs{Cairo} = $build_reqs{'perl-Cairo'};
-  unless (eval "use Cairo '$build_reqs{'perl-Cairo'}'; 1;") {
-    warn "$@\n";
-    WriteMakefile(
-      PREREQ_FATAL => 1,
-      PREREQ_PM    => \%pm_reqs,
-    );
-    exit 1; # not reached
+my $need_cairo =
+  $rsvg_version[0] > 2 || ($rsvg_version[0] == 2 && $rsvg_version[1] >= 14);
+if ($need_cairo) {
+  # FIXME: Putting Cairo into %PREREQ_PM here means that whenever the package
+  # has librsvg-2.0 >= 2.14, the generated tarball's META.yml will always list
+  # Cairo as a dependency.  So, even on machines with librsvg-2.0 < 2.14, we
+  # will demand Cairo.
+  $PREREQ_PM{Cairo} = $CAIRO_PREREQ_PM;
+  unless (eval "use Cairo '$CAIRO_PREREQ_PM'; 1;") {
+    warn $@;
+    exit 0;
   }
 }
 
@@ -61,8 +64,8 @@ if ($rsvg_version[0] > 2 || ($rsvg_version[0] == 2 && $rsvg_version[1] >= 14)) {
 
 mkdir 'build', 0777;
 
-our @xs_files = <xs/*.xs>;
-our %pod_files = (
+my @xs_files = <xs/*.xs>;
+my %pod_files = (
   'Rsvg.pm' => '$(INST_MAN3DIR)/Gnome2::Rsvg.$(MAN3EXT)',
   Glib::MakeHelper->do_pod_files (@xs_files),
 );
@@ -99,7 +102,12 @@ WriteMakefile(
   ABSTRACT_FROM   => 'Rsvg.pm', # retrieve abstract from module
   XSPROTOARG      => '-noprototypes',
   MAN3PODS        => \%pod_files,
-  PREREQ_PM       => \%pm_reqs,
+  PREREQ_PM       => \%PREREQ_PM,
+
+  META_MERGE => {
+    configure_requires => \%PREREQ_PM,
+  },
+
   $rsvg->get_makefile_vars,
 );
 
@@ -113,12 +121,12 @@ sub MY::postamble {
 		COPYRIGHT_FROM => 'copyright.pod'
          )
        . Glib::MakeHelper->postamble_rpms (
-		'GNOME_RSVG' => $build_reqs{'librsvg'},
+		'GNOME_RSVG' => $BUILD_REQ{'librsvg-2.0'},
 		'PERL_EXTUTILS_DEPENDS' =>
-			$build_reqs{'perl-ExtUtils-Depends'},
+			$PREREQ_PM{'ExtUtils-Depends'},
 		'PERL_EXTUTILS_PKGCONFIG' =>
-			$build_reqs{'perl-ExtUtils-PkgConfig'},
-		'PERL_GLIB' => $build_reqs{'perl-Glib'},
-		'PERL_GTK' => $build_reqs{'perl-Gtk2'},
+			$PREREQ_PM{'ExtUtils-PkgConfig'},
+		'PERL_GLIB' => $PREREQ_PM{'Glib'},
+		'PERL_GTK' => $PREREQ_PM{'Gtk2'},
 	);
 }

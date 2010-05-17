@@ -1,10 +1,13 @@
-# $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/Rsvg.pm,v 1.9 2006/12/30 19:10:13 kaffeetisch Exp $
-
 package Gnome2::Rsvg;
 
 use 5.008;
 use strict;
 use warnings;
+
+
+# If librsvg-2.0 >= 2.14, we need Cairo.  Gtk2 may or may not load Cairo for,
+# so better do it here.
+eval "use Cairo;";
 
 use Glib;
 use Gtk2;
@@ -12,7 +15,7 @@ use Gtk2;
 require DynaLoader;
 
 our @ISA = qw(DynaLoader);
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 sub dl_load_flags { $^O eq 'darwin' ? 0x00 : 0x01 }
 
@@ -65,6 +68,20 @@ Torsten Schoenfeld E<lt>kaffeetisch at gmx dot deE<gt>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2003-2005 by the gtk2-perl team
+Copyright (C) 2003-2005, 2010  Torsten Schoenfeld
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 =cut

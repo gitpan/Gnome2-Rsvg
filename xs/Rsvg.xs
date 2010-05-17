@@ -1,21 +1,19 @@
 /*
- * Copyright (C) 2003-2005 by the gtk2-perl team
- * 
+ * Copyright (C) 2003-2005, 2010  Torsten Schoenfeld
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * $Header: /cvsroot/gtk2-perl/gtk2-perl-xs/Gnome2-Rsvg/xs/Rsvg.xs,v 1.11 2006/12/30 19:07:41 kaffeetisch Exp $
  */
 
 #include "rsvg2perl.h"
@@ -66,6 +64,49 @@ rsvg2perl_size_func (gint *width,
 
 /* ------------------------------------------------------------------------- */
 
+#if LIBRSVG_CHECK_VERSION (2, 14, 0)
+
+static SV *
+newSVRsvgDimensionData (RsvgDimensionData *data)
+{
+	HV *hv;
+
+	if (!data)
+		return &PL_sv_undef;
+
+	hv = newHV ();
+	hv_store (hv, "width", 5, newSViv (data->width), 0);
+	hv_store (hv, "height", 6, newSViv (data->height), 0);
+	hv_store (hv, "em", 2, newSVnv (data->em), 0);
+	hv_store (hv, "ex", 2, newSVnv (data->ex), 0);
+
+	return newRV_noinc ((SV *) hv);
+}
+
+#endif
+
+#if LIBRSVG_CHECK_VERSION (2, 22, 0)
+
+static SV *
+newSVRsvgPositionData (RsvgPositionData *data)
+{
+	HV *hv;
+
+	if (!data)
+		return &PL_sv_undef;
+
+	hv = newHV ();
+	hv_store (hv, "x", 1, newSViv (data->x), 0);
+	hv_store (hv, "y", 1, newSVnv (data->y), 0);
+
+	return newRV_noinc ((SV *) hv);
+}
+
+#endif
+
+/* ------------------------------------------------------------------------- */
+
+
 MODULE = Gnome2::Rsvg	PACKAGE = Gnome2::Rsvg	PREFIX = rsvg_
 
 =for object Gnome2::Rsvg::main
@@ -95,10 +136,12 @@ CHECK_VERSION (class, major, minor, micro)
     OUTPUT:
 	RETVAL
 
-##  GQuark rsvg_error_quark (void) G_GNUC_CONST 
+##  GQuark rsvg_error_quark (void) G_GNUC_CONST
 
-##  GdkPixbuf *rsvg_pixbuf_from_file (const gchar *file_name, GError **error) 
-GdkPixbuf *
+=for apidoc __gerror__
+=cut
+##  GdkPixbuf *rsvg_pixbuf_from_file (const gchar *file_name, GError **error)
+GdkPixbuf_noinc *
 rsvg_pixbuf_from_file (class, file_name)
 	const gchar *file_name
     PREINIT:
@@ -109,11 +152,11 @@ rsvg_pixbuf_from_file (class, file_name)
 		gperl_croak_gerror (file_name, error);
     OUTPUT:
 	RETVAL
-    CLEANUP:
-	if (RETVAL) gdk_pixbuf_unref (RETVAL);
 
-##  GdkPixbuf *rsvg_pixbuf_from_file_at_zoom (const gchar *file_name, double x_zoom, double y_zoom, GError **error) 
-GdkPixbuf *
+=for apidoc __gerror__
+=cut
+##  GdkPixbuf *rsvg_pixbuf_from_file_at_zoom (const gchar *file_name, double x_zoom, double y_zoom, GError **error)
+GdkPixbuf_noinc *
 rsvg_pixbuf_from_file_at_zoom (class, file_name, x_zoom, y_zoom)
 	const gchar *file_name
 	double x_zoom
@@ -126,11 +169,11 @@ rsvg_pixbuf_from_file_at_zoom (class, file_name, x_zoom, y_zoom)
 		gperl_croak_gerror (file_name, error);
     OUTPUT:
 	RETVAL
-    CLEANUP:
-	gdk_pixbuf_unref (RETVAL);
 
-##  GdkPixbuf *rsvg_pixbuf_from_file_at_size (const gchar *file_name, gint width, gint height, GError **error) 
-GdkPixbuf *
+=for apidoc __gerror__
+=cut
+##  GdkPixbuf *rsvg_pixbuf_from_file_at_size (const gchar *file_name, gint width, gint height, GError **error)
+GdkPixbuf_noinc *
 rsvg_pixbuf_from_file_at_size (class, file_name, width, height)
 	const gchar *file_name
 	gint width
@@ -143,11 +186,11 @@ rsvg_pixbuf_from_file_at_size (class, file_name, width, height)
 		gperl_croak_gerror (file_name, error);
     OUTPUT:
 	RETVAL
-    CLEANUP:
-	gdk_pixbuf_unref (RETVAL);
 
-##  GdkPixbuf *rsvg_pixbuf_from_file_at_max_size (const gchar *file_name, gint max_width, gint max_height, GError **error) 
-GdkPixbuf *
+=for apidoc __gerror__
+=cut
+##  GdkPixbuf *rsvg_pixbuf_from_file_at_max_size (const gchar *file_name, gint max_width, gint max_height, GError **error)
+GdkPixbuf_noinc *
 rsvg_pixbuf_from_file_at_max_size (class, file_name, max_width, max_height)
 	const gchar *file_name
 	gint max_width
@@ -160,11 +203,11 @@ rsvg_pixbuf_from_file_at_max_size (class, file_name, max_width, max_height)
 		gperl_croak_gerror (file_name, error);
     OUTPUT:
 	RETVAL
-    CLEANUP:
-	gdk_pixbuf_unref (RETVAL);
 
-##  GdkPixbuf *rsvg_pixbuf_from_file_at_zoom_with_max (const gchar *file_name, double x_zoom, double y_zoom, gint max_width, gint max_height, GError **error) 
-GdkPixbuf *
+=for apidoc __gerror__
+=cut
+##  GdkPixbuf *rsvg_pixbuf_from_file_at_zoom_with_max (const gchar *file_name, double x_zoom, double y_zoom, gint max_width, gint max_height, GError **error)
+GdkPixbuf_noinc *
 rsvg_pixbuf_from_file_at_zoom_with_max (class, file_name, x_zoom, y_zoom, max_width, max_height)
 	const gchar *file_name
 	double x_zoom
@@ -179,8 +222,6 @@ rsvg_pixbuf_from_file_at_zoom_with_max (class, file_name, x_zoom, y_zoom, max_wi
 		gperl_croak_gerror (file_name, error);
     OUTPUT:
 	RETVAL
-    CLEANUP:
-	gdk_pixbuf_unref (RETVAL);
 
 ##  void rsvg_set_default_dpi (double dpi,)
 void
@@ -189,9 +230,15 @@ rsvg_set_default_dpi (class, dpi)
     C_ARGS:
 	dpi
 
+##  void rsvg_set_default_dpi_x_y (double dpi_x, double dpi_y)
+void
+rsvg_set_default_dpi_x_y (class, double dpi_x, double dpi_y)
+    C_ARGS:
+	dpi_x, dpi_y
+
 MODULE = Gnome2::Rsvg	PACKAGE = Gnome2::Rsvg::Handle	PREFIX = rsvg_handle_
 
-##  RsvgHandle *rsvg_handle_new (void) 
+##  RsvgHandle *rsvg_handle_new (void)
 RsvgHandle *
 rsvg_handle_new (class)
     C_ARGS:
@@ -203,7 +250,7 @@ DESTROY (handle)
     CODE:
 	rsvg_handle_free (handle);
 
-##  void rsvg_handle_set_size_callback (RsvgHandle *handle, RsvgSizeFunc size_func, gpointer user_data, GDestroyNotify user_data_destroy) 
+##  void rsvg_handle_set_size_callback (RsvgHandle *handle, RsvgSizeFunc size_func, gpointer user_data, GDestroyNotify user_data_destroy)
 void
 rsvg_handle_set_size_callback (handle, size_func, user_data=NULL)
 	RsvgHandle *handle
@@ -218,7 +265,9 @@ rsvg_handle_set_size_callback (handle, size_func, user_data=NULL)
 	                               callback,
 	                               (GDestroyNotify) gperl_callback_destroy);
 
-##  gboolean rsvg_handle_write (RsvgHandle *handle, const guchar *buf, gsize count, GError **error) 
+=for apidoc __gerror__
+=cut
+##  gboolean rsvg_handle_write (RsvgHandle *handle, const guchar *buf, gsize count, GError **error)
 gboolean
 rsvg_handle_write (handle, data)
 	RsvgHandle *handle
@@ -235,7 +284,9 @@ rsvg_handle_write (handle, data)
     OUTPUT:
 	RETVAL
 
-##  gboolean rsvg_handle_close (RsvgHandle *handle, GError **error) 
+=for apidoc __gerror__
+=cut
+##  gboolean rsvg_handle_close (RsvgHandle *handle, GError **error)
 gboolean
 rsvg_handle_close (handle)
 	RsvgHandle *handle
@@ -248,10 +299,52 @@ rsvg_handle_close (handle)
     OUTPUT:
 	RETVAL
 
-##  GdkPixbuf *rsvg_handle_get_pixbuf (RsvgHandle *handle) 
-GdkPixbuf *
+#if LIBRSVG_CHECK_VERSION (2, 14, 0)
+
+=for apidoc __gerror__
+=cut
+##  RsvgHandle * rsvg_handle_new_from_data (const guint8 *data, gsize data_len, GError **error);
+RsvgHandle *
+rsvg_handle_new_from_data (class, SV *data)
+    PREINIT:
+	const guint8 *real_data;
+	gsize data_len = 0;
+	GError *error = NULL;
+    CODE:
+	real_data = (const guint8 *) SvPV (data, data_len);
+	RETVAL = rsvg_handle_new_from_data (real_data, data_len, &error);
+	if (error)
+		gperl_croak_gerror (NULL, error);
+    OUTPUT:
+	RETVAL
+
+=for apidoc __gerror__
+=cut
+##  Deliberately use 'char' instead of 'gchar' to avoid encorcing UTF-8.
+##  RsvgHandle * rsvg_handle_new_from_file (const gchar *file_name, GError **error);
+RsvgHandle *
+rsvg_handle_new_from_file (class, const char *file_name)
+    PREINIT:
+	GError *error = NULL;
+    CODE:
+	RETVAL = rsvg_handle_new_from_file (file_name, &error);
+	if (error)
+		gperl_croak_gerror (NULL, error);
+    OUTPUT:
+	RETVAL
+
+#endif
+
+##  GdkPixbuf *rsvg_handle_get_pixbuf (RsvgHandle *handle)
+GdkPixbuf_noinc *
 rsvg_handle_get_pixbuf (handle)
 	RsvgHandle *handle
+
+#if LIBRSVG_CHECK_VERSION (2, 14, 0)
+
+GdkPixbuf_noinc * rsvg_handle_get_pixbuf_sub (RsvgHandle * handle, const char_ornull *id);
+
+#endif
 
 #if LIBRSVG_CHECK_VERSION (2, 4, 0)
 
@@ -267,11 +360,60 @@ rsvg_handle_get_desc (handle)
 
 #endif /* 2.4.0 */
 
+#if LIBRSVG_CHECK_VERSION (2, 14, 0)
+
+##  void rsvg_handle_get_dimensions (RsvgHandle *handle, RsvgDimensionData *dimension_data);
+SV *
+rsvg_handle_get_dimensions (RsvgHandle *handle)
+    PREINIT:
+	RsvgDimensionData dimension_data = {0,};
+    CODE:
+	rsvg_handle_get_dimensions (handle, &dimension_data);
+	RETVAL = newSVRsvgDimensionData (&dimension_data);
+    OUTPUT:
+	RETVAL
+
+#endif
+
+#if LIBRSVG_CHECK_VERSION (2, 22, 0)
+
+##  gboolean rsvg_handle_get_dimensions_sub (RsvgHandle *handle, RsvgDimensionData *dimension_data, const char *id);
+SV *
+rsvg_handle_get_dimensions_sub (RsvgHandle *handle, const char_ornull *id)
+    PREINIT:
+	RsvgDimensionData dimension_data = {0,};
+    CODE:
+	if (!rsvg_handle_get_dimensions_sub (handle, &dimension_data, id))
+		RETVAL = &PL_sv_undef;
+	else
+		RETVAL = newSVRsvgDimensionData (&dimension_data);
+    OUTPUT:
+	RETVAL
+
+##  gboolean rsvg_handle_get_position_sub (RsvgHandle *handle, RsvgPositionData *position_data, const char *id);
+SV *
+rsvg_handle_get_position_sub (RsvgHandle *handle, const char_ornull *id)
+    PREINIT:
+	RsvgPositionData position_data = {0,};
+    CODE:
+	if (!rsvg_handle_get_position_sub (handle, &position_data, id))
+		RETVAL = &PL_sv_undef;
+	else
+		RETVAL = newSVRsvgPositionData (&position_data);
+    OUTPUT:
+	RETVAL
+
+gboolean rsvg_handle_has_sub (RsvgHandle *handle, const char *id);
+
+#endif
+
 ##  void rsvg_handle_set_dpi (RsvgHandle *handle, double dpi)
 void
 rsvg_handle_set_dpi (handle, dpi)
 	RsvgHandle *handle
 	double dpi
+
+void rsvg_handle_set_dpi_x_y (RsvgHandle *handle, double dpi_x, double dpi_y);
 
 #if LIBRSVG_CHECK_VERSION (2, 10, 0)
 
@@ -293,10 +435,20 @@ rsvg_handle_get_metadata (handle)
 
 #endif /* 2.10.0 */
 
+#if LIBRSVG_CHECK_VERSION (2, 22, 0)
+
+gboolean rsvg_handle_render_cairo (RsvgHandle *handle, cairo_t *cr);
+
+gboolean rsvg_handle_render_cairo_sub(RsvgHandle *handle, cairo_t *cr, const char_ornull * id);
+
+#else
+
 #if LIBRSVG_CHECK_VERSION (2, 14, 0)
 
 void rsvg_handle_render_cairo (RsvgHandle *handle, cairo_t *cr);
 
-void rsvg_handle_render_cairo_sub(RsvgHandle *handle, cairo_t *cr, const char * id);
+void rsvg_handle_render_cairo_sub(RsvgHandle *handle, cairo_t *cr, const char_ornull * id);
+
+#endif
 
 #endif

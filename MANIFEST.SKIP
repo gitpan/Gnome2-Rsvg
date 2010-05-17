@@ -3,11 +3,12 @@
 blib
 \.bs$
 build
-CVS
-\.cvsignore$
+\.git
+\.gitignore$
 Makefile$
 Makefile\.old$
-\.o$
+xs/.*\.c$
+xs/.*\.o$
 \.spec$
 \.sw.$
 \.tar\.gz$
